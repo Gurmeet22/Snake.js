@@ -13,8 +13,8 @@ let snake = [];
 let curdir = 'right';
 let dot = {};
 let score = 0;
-var timer = null;
-for (let i = size+1; i >= 1; i--) {
+let timer = null;
+for (let i = size+5; i >= 1; i--) {
     snake[size - i] = { x: i, y: 5 };
 }
 
@@ -66,20 +66,20 @@ var gamebox = blessed.box({
       }
     }
   });
-  const overbox = blessed.box({
+  var overbox = blessed.box({
     parent : screen,
     top: 'center',
     left: 'center',
     width: '30%',
-    height: '30%',
-    content: '{center}{bold}Game Over!!!{/bold}{/center}',
+    height: '50%',
+    content: '',
     tags: true,
     border: {
         type: 'line'
       },
     style: {
-      fg: 'red',
-      bg: 'yellow',
+      fg: 'white',
+      bg: 'black',
       border: {
         fg: '#f0f0f0'
       },
@@ -178,28 +178,55 @@ const moveSnake = () => {
 
 const isGameOver = () => {
     
-    const collide = snake.find((segment) => segment.x === snake[0].x && segment.y === snake[0].y);
+    let collide = false;
+    for(let i=1;i<snake.length;i++){
+      if((snake[i].x === snake[0].x) && (snake[i].y === snake[0].x)){
+        collide = false;
+      }
+    }
 
     return (
-      collide || snake[0].x >= gamebox.width - 1 || snake[0].x <= -1 || snake[0].y >= gamebox.height - 1 || snake[0].y <= -1
+      collide || snake[0].x >= gamebox.width - 1 || snake[0].x <= -1 || snake[0].y >= gamebox.height - 2 || snake[0].y <= -1
     );
 };
 gamebox.key(['up','down','left','right'],  function(ch, key) {
     changeDirection(key);
-    screen.render();
+    
+});
+overbox.key('enter',  function(ch, key) {
+  curdir = 'right';
+  snake = [];
+  for (let i = size+5; i >= 1; i--) {
+    snake[size - i] = { x: i, y: 5 };
+}
+score = 0;
+timer = null;
+generateDot();
+  if (!timer) {
+    timer = setInterval(tick, speed);
+}
+  
 });
 generateDot();
 const tick = () => {
     
 
-    
+    gamebox.detach();
+    screen.append(gamebox);
     drawDot();
     moveSnake();
     drawSnake();
     gamebox.focus();
     screen.render();
       if (isGameOver()) {
+        clearInterval(timer);
+          timer = null;
+        
+        overbox.setLine(0, `{center}{bold}Game Over!!! Score = ${score}. Press 'Esc' or 'q' to quit. Press 'enter' to retry. {/bold}{/center}`);
+          
           screen.append(overbox);
+          screen.render();
+          overbox.focus();
         }
 }
 
