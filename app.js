@@ -127,17 +127,17 @@ const getRanPixelCoord = (min, max) => Math.round(Math.random() * (max - min) + 
 
 
 const changeDirection = (key) => {
-    if ((key.name === 'up' || key.name === 'w') && curdir !== 'down') {
-      curdir = 'up'
+    if ((key.name === 'up') && curdir !== 'down') {
+      curdir = 'up';
     }
-    if ((key.name === 'down' || key.name === 's') && curdir !== 'up') {
-      curdir = 'down'
+    if ((key.name === 'down') && curdir !== 'up') {
+      curdir = 'down';
     }
-    if ((key.name === 'left' || key.name === 'a') && curdir !== 'right') {
-      curdir = 'left'
+    if ((key.name === 'left') && curdir !== 'right') {
+      curdir = 'left';
     }
-    if ((key.name === 'right' || key.name === 'd') && curdir !== 'left') {
-      curdir = 'right'
+    if ((key.name === 'right') && curdir !== 'left') {
+      curdir = 'right';
     }
 }
 
@@ -186,7 +186,7 @@ const isGameOver = () => {
     }
 
     return (
-      collide || snake[0].x >= gamebox.width - 1 || snake[0].x <= -1 || snake[0].y >= gamebox.height - 2 || snake[0].y <= -1
+      collide || snake[0].x >= gamebox.width - 1 || snake[0].x <= -1 || snake[0].y >= gamebox.height - 1 || snake[0].y <= -1
     );
 };
 gamebox.key(['up','down','left','right'],  function(ch, key) {
@@ -194,12 +194,14 @@ gamebox.key(['up','down','left','right'],  function(ch, key) {
     
 });
 overbox.key('enter',  function(ch, key) {
+  
   curdir = 'right';
   snake = [];
   for (let i = size+5; i >= 1; i--) {
     snake[size - i] = { x: i, y: 5 };
 }
 score = 0;
+updateScore(score);
 timer = null;
 generateDot();
   if (!timer) {
