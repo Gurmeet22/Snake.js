@@ -180,8 +180,8 @@ const isGameOver = () => {
     
     let collide = false;
     for(let i=1;i<snake.length;i++){
-      if((snake[i].x === snake[0].x) && (snake[i].y === snake[0].x)){
-        collide = false;
+      if((snake[i].x === snake[0].x) && (snake[i].y === snake[0].y)){
+        collide = true;
       }
     }
 
